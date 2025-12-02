@@ -1,40 +1,212 @@
-/* BOTÓN FLOTANTE GENERAL */
-.simple-wp-floating-button-personalizado {
+/* ===========================================================
+   WRAPPER GENERAL (maneja posición, halo y animaciones)
+=========================================================== */
+.simple-wp-floating-button-wrapper {
   position: fixed;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 99999;
+  display: inline-flex;
+  isolation: isolate; /* halo detrás del contenido */
+}
+
+/* Posiciones */
+.simple-wp-floating-button-wrapper.center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.simple-wp-floating-button-wrapper.left {
+  left: 20px;
+  transform: translateX(0);
+}
+
+.simple-wp-floating-button-wrapper.right {
+  right: 20px;
+  left: auto;
+  transform: translateX(0);
+}
+
+/* ===========================================================
+   BOTÓN (ya NO lleva posición ni halo)
+=========================================================== */
+.simple-wp-floating-button-personalizado {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-
-  padding: 14px 22px; /* padding horizontal estándar */
+  padding: 14px 22px;
   border-radius: 30px;
   color: #ffffff;
   font-weight: 700;
   text-decoration: none;
-  z-index: 99999;
-  transition: opacity 0.2s ease-in-out, transform 0.15s ease;
   font-size: 18px;
   box-sizing: border-box;
   white-space: nowrap;
+  transition: transform 0.15s ease, opacity 0.2s ease-in-out;
 }
 
-/* Hover */
-.simple-wp-floating-button-personalizado:hover {
+/* Icon-only */
+.simple-wp-floating-button-personalizado.solo-icono {
+  padding: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  gap: 0;
+}
+
+/* HOVER → se aplica al wrapper para no romper animaciones */
+.simple-wp-floating-button-wrapper:hover
+  .simple-wp-floating-button-personalizado {
+  transform: translateY(-2px);
   opacity: 0.92;
-  transform: translateX(-50%) translateY(-2px);
 }
 
-/* ICONO */
+/* ===========================================================
+   HALO ANIMATION (solo en el wrapper)
+=========================================================== */
+
+.simple-wp-floating-button-wrapper.pulse-halo {
+  position: fixed;
+  isolation: isolate;
+}
+
+.simple-wp-floating-button-wrapper.pulse-halo::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  /*background-color: rgba(0, 123, 255, 0.4);*/
+  border-radius: 999px;
+  transform: translate(-50%, -50%) scale(0.1);
+  z-index: -1;
+  pointer-events: none;
+  animation: halo-pulse 2s infinite ease-out;
+}
+
+.simple-wp-floating-button-wrapper.pulse-halo::after {
+  background-color: var(--swp-halo-color);
+}
+
+@keyframes halo-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.6;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ===========================================================
+   ANIMACIONES (se aplican al wrapper AHORA)
+=========================================================== */
+
+/* 1. Pulse */
+.simple-wp-floating-button-wrapper.pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 2. Float */
+.simple-wp-floating-button-wrapper.float {
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* 3. Spin */
+.simple-wp-floating-button-wrapper.spin {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 4. Bounce */
+.simple-wp-floating-button-wrapper.bounce {
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-12px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-6px);
+  }
+}
+
+/* 5. Shake */
+.simple-wp-floating-button-wrapper.shake {
+  animation: shake 0.8s infinite;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+/* ===========================================================
+   ICONO SVG
+=========================================================== */
 .simple-wp-floating-button-icono {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-
-/* TAMAÑO DEL ICONO */
 .simple-wp-floating-button-icono.pequeno {
   width: 14px;
   height: 14px;
@@ -48,30 +220,8 @@
   height: 32px;
 }
 
-/* SVG dentro del icono */
 .simple-wp-floating-button-icono svg {
   width: 100%;
   height: 100%;
   display: block;
-}
-
-/* --- BOTÓN SOLO ICONO --- */
-.simple-wp-floating-button-personalizado.solo-icono {
-  padding: 8px; /* padding igual arriba/abajo/izq/der */
-  width: 64px; /* ancho = alto para que sea círculo */
-  height: 64px;
-  border-radius: 50%; /* círculo perfecto */
-  gap: 0; /* no separar nada, solo icono */
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .simple-wp-floating-button-personalizado {
-    bottom: 18px;
-  }
-  .simple-wp-floating-button-personalizado.solo-icono {
-    width: 48px;
-    height: 48px;
-    padding: 12px;
-  }
 }

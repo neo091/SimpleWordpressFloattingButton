@@ -16,6 +16,8 @@ function simple_wp_floating_button_guardar_configuracion(){
     update_option('simple_wp_floating_button_excluir', $form_data['simple_wp_floating_button_excluir'] ?? '');
     update_option('simple_wp_floating_button_color', $form_data['simple_wp_floating_button_color'] ?? '#007bff');
     update_option('simple_wp_floating_button_texto', $form_data['simple_wp_floating_button_texto'] ?? '');
+    update_option('simple_wp_floating_button_position', $form_data['simple_wp_floating_button_position'] ?? 'center');
+    update_option('simple_wp_floating_button_animation', $form_data['simple_wp_floating_button_animation'] ?? 'pulse');
     update_option('simple_wp_floating_button_svg', $form_data['simple_wp_floating_button_svg'] ?? '');
     update_option('simple_wp_floating_button_icon_color', $form_data['simple_wp_floating_button_icon_color'] ?? '#000000');
     update_option('simple_wp_floating_button_icon_size', $form_data['simple_wp_floating_button_icon_size'] ?? 'mediano');
@@ -31,6 +33,8 @@ function simple_wp_floating_button_guardar_configuracion(){
 function simple_wp_floating_button_register_settings() {
     register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_color');
     register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_texto');
+    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_position');
+    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_animation');
     register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_svg');  // NUEVO
     register_setting("simple_wp_floating_button_opciones", 'simple_wp_floating_button_icon_color');  // NUEVO
     register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_icon_size');  // NUEVO
@@ -80,11 +84,12 @@ function simple_wp_floating_button_settings_page() {
 
     $svg_list = simple_wp_floating_button_get_icon_list();
     $value = get_option('simple_wp_floating_button_icon_size', 'mediano');
+    $position = get_option('simple_wp_floating_button_position', 'center');
+    $animation = get_option('simple_wp_floating_button_animation', 'pulse');
 
 ?>
     <div class="wrap">
-        <div class="">
-            <h1>Configuración del Botón</h1>
+        <h1>Configuración del Botón</h1>
 
         <form method="post" action="options.php">
             <?php settings_fields('simple_wp_floating_button_opciones'); ?>
@@ -94,10 +99,9 @@ function simple_wp_floating_button_settings_page() {
             <table class="form-table">
 
              <tr>
-                    <th>Activar botón flotante:</th>
-                    <td>
-                        <input type="checkbox" name="simple_wp_floating_button_auto"
-                               value="1" <?php checked(get_option('simple_wp_floating_button_auto'), 1); ?>>
+                <th>Activar botón flotante:</th>
+                <td>
+                    <input type="checkbox" name="simple_wp_floating_button_auto" value="1" <?php checked(get_option('simple_wp_floating_button_auto'), 1); ?>>
                         Mostrar el botón flotante
                     </td>
                 </tr>
@@ -119,6 +123,36 @@ function simple_wp_floating_button_settings_page() {
                     </td>
                 </tr>
 
+                <tr>
+                    <th>Posición:</th>
+                    <td>
+                        <select name="simple_wp_floating_button_position">
+                            <option value="left" <?php selected($position, 'left'); ?>>Izquierda</option>
+                            <option value="center" <?php selected($position, 'center'); ?>>Centro</option>
+                            <option value="right" <?php selected($position, 'right'); ?>>Derecha</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Animación:</th>
+                    <td>
+                        <select name="simple_wp_floating_button_animation">
+                            <option value="pulse" <?php selected($animation, 'pulse'); ?>>Pulse</option>
+                            <option value="pulse-halo" <?php selected($animation, 'pulse-halo'); ?>>Pulse Halo</option>
+                            <option value="float" <?php selected($animation, 'float'); ?>>Float</option>
+                            <option value="spin" <?php selected($animation, 'spin'); ?>>Spin</option>
+                            <option value="bounce" <?php selected($animation, 'bounce'); ?>>Bounce</option>
+                            <option value="no-animation" <?php selected($animation, 'no-animation'); ?>>Ninguna</option>
+                        </select>
+                    </td>
+                </tr>
+                
+            </table>
+
+            <h2>Icono (SVG)</h2>
+
+            <table class="form-table">
                 <tr>
                     <th>Icono SVG cargado:</th>
                     <td>
@@ -151,7 +185,6 @@ function simple_wp_floating_button_settings_page() {
                         <p class="description">Tamaño del icono</p>
                     </td>
                 </tr>
-
             </table>
 
             <h2>Enlace</h2>
@@ -225,7 +258,6 @@ https://tusitio.com"><?php echo esc_textarea(get_option('simple_wp_floating_butt
             </table>
             
         </form>
-        </div>
     </div>
 <?php
 }
