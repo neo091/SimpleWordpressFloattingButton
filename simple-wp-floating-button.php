@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Simple Wordpress Floating Button
  * Description: Simple Wordpress Floating Button Plugin to add a customizable floating button to your website.
- * Version: 1.2
+ * Version: 1.2.0
  * Author: neo091
  * License: MIT
  * Text Domain: simple-wp-floating-button
