@@ -2,27 +2,27 @@
 
 if (!defined('ABSPATH')) exit;
 
-function mi_boton_build_button() {
-    $color  = esc_attr(get_option('mi_boton_color', '#ff0000'));
-    $texto  = esc_html(get_option('mi_boton_texto'));
-    $svg    = get_option('mi_boton_svg');
-    $svg_icon_size = get_option('mi_boton_icon_size', 'mediano');
-    $svg_icon_color = get_option('mi_boton_icon_color', '#000000ff');
-    $url    = esc_url(get_option('mi_boton_url'));
-    $target = get_option('mi_boton_target') ? ' target="_blank"' : '';
+function simple_wp_floating_button_build_button() {
+    $color  = esc_attr(get_option('simple_wp_floating_button_color', '#ff0000'));
+    $texto  = esc_html(get_option('simple_wp_floating_button_texto'));
+    $svg    = get_option('simple_wp_floating_button_svg');
+    $svg_icon_size = get_option('simple_wp_floating_button_icon_size', 'mediano');
+    $svg_icon_color = get_option('simple_wp_floating_button_icon_color', '#000000ff');
+    $url    = esc_url(get_option('simple_wp_floating_button_url'));
+    $target = get_option('simple_wp_floating_button_target') ? ' target="_blank"' : '';
 
     $contenido = "";
 
-    $classes = 'mi-boton-personalizado';
+    $classes = ' simple-wp-floating-button-personalizado';
     if (trim($texto) === '') {
         $classes .= ' solo-icono'; // clase para botón circular
     }
 
     // SVG PRIORIDAD MÁXIMA
     if ($svg) {
-        $path = MI_BOTON_PATH . "assets/icons/" . $svg;
+        $path = SIMPLE_WP_FLOATING_BUTTON_PATH . "assets/icons/" . $svg;
         if (file_exists($path)) {
-            $contenido .= "<span class='mi-boton-icono ". esc_attr($svg_icon_size)."' style='color:".$svg_icon_color."'> " . file_get_contents($path) . "</span>";
+            $contenido .= "<span class='simple-wp-floating-button-icono ". esc_attr($svg_icon_size)."' style='color:".$svg_icon_color."'> " . file_get_contents($path) . "</span>";
         }
     }
 
@@ -42,8 +42,8 @@ function mi_boton_build_button() {
     return "<div class='".$classes."' style='background:$color;'>$contenido</div>";
 }
 
-function mi_boton_shortcode() {
-    return mi_boton_build_button();
+function simple_wp_floating_button_shortcode() {
+    return simple_wp_floating_button_build_button();
 }
 
-add_shortcode('mi_boton', 'mi_boton_shortcode');
+add_shortcode('simple_wp_floating_button', 'simple_wp_floating_button_shortcode');

@@ -1,6 +1,8 @@
 jQuery(document).ready(function ($) {
   const $form = document.querySelector(".wrap form")
-  const $myBtnMessage = document.getElementById("mi-boton-estado")
+  const $myBtnMessage = document.getElementById(
+    "simple-wp-floating-button-estado"
+  )
 
   $form.addEventListener("submit", function (e) {
     e.preventDefault()
@@ -17,7 +19,7 @@ jQuery(document).ready(function ($) {
 
     // enviar TODO dentro de 'data'
     const params = new URLSearchParams()
-    params.append("action", "mi_boton_guardar_ajax")
+    params.append("action", "simple_wp_floating_button_guardar_ajax")
     params.append("nonce", miBotonAjax.nonce)
     params.append("data", urlEncodedData.toString()) // <--- clave 'data'
 
@@ -35,7 +37,10 @@ jQuery(document).ready(function ($) {
           setTimeout(() => {
             $myBtnMessage.textContent = ""
           }, 3000)
-        } else console.log("Error al guardar la configuración: " + data.data)
+        } else {
+          console.log("Error al guardar la configuración: " + data.data)
+          $myBtnMessage.textContent = "Error al guardar la configuración."
+        }
       })
       .catch((err) => {
         console.error(err)
