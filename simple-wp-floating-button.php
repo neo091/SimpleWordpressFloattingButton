@@ -6,6 +6,7 @@
  * Author: neo091
  * License: MIT
  * Text Domain: simple-wp-floating-button
+ * 
  */
 
 if (!defined('ABSPATH')) exit;
