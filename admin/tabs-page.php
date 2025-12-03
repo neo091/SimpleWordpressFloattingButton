@@ -138,8 +138,8 @@ https://tusitio.com"><?php echo esc_textarea(get_option('simple_wp_floating_butt
                 <tr>
                     <th>Texto del Botón:</th>
                     <td>
-                        <input type="text" name="simple_wp_floating_button_texto"
-                               value="<?php echo esc_attr(get_option('simple_wp_floating_button_texto', 'Haz clic aquí')); ?>"
+                        <input type="text" name="simple_wp_floating_button_text"
+                               value="<?php echo esc_attr(get_option('simple_wp_floating_button_text', 'Haz clic aquí')); ?>"
                                style="width: 300px;">
                     </td>
                 </tr>

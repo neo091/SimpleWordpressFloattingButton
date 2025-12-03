@@ -11,13 +11,17 @@ function simple_wp_floating_button_guardar_configuracion_tabs(){
     parse_str($_POST['data'], $form_data); // convierte en array
 
     // Guardar opciones
-    update_option('simple_wp_floating_button_auto', isset($form_data['simple_wp_floating_button_auto']) ? 1 : 0);
-    update_option('simple_wp_floating_button_color', $form_data['simple_wp_floating_button_color'] ?? '#007bff');
-    update_option('simple_wp_floating_button_texto', $form_data['simple_wp_floating_button_texto'] ?? '');
-    update_option('simple_wp_floating_button_position', $form_data['simple_wp_floating_button_position'] ?? 'center');
-    update_option('simple_wp_floating_button_animation', $form_data['simple_wp_floating_button_animation'] ?? 'pulse');
-    update_option('simple_wp_floating_button_url', $form_data['simple_wp_floating_button_url'] ?? '');
-    update_option('simple_wp_floating_button_target', isset($form_data['simple_wp_floating_button_target']) ? 1 : 0);
+    $options = get_option('simple_wp_floating_button_options', []);
+
+    $options['color'] = $form_data['simple_wp_floating_button_color'] ?? '#007bff';
+    $options['text'] = $form_data['simple_wp_floating_button_text'] ?? '';
+    $options['position'] = $form_data['simple_wp_floating_button_position'] ?? 'center';
+    $options['animation'] = $form_data['simple_wp_floating_button_animation'] ?? 'pulse';
+    $options['url'] = $form_data['simple_wp_floating_button_url'] ?? '';
+    $options['target'] = isset($form_data['simple_wp_floating_button_target']) ? 1 : 0;
+    $options['auto'] = isset($form_data['simple_wp_floating_button_auto']) ? 1 : 0;
+
+    update_option('simple_wp_floating_button_options', $options);
 
     wp_send_json_success();
 }
@@ -31,9 +35,12 @@ function simple_wp_floating_button_guardar_configuracion_tabs_svg(){
     parse_str($_POST['data'], $form_data); // convierte en array
 
     // Guardar opciones
-    update_option('simple_wp_floating_button_svg', $form_data['simple_wp_floating_button_svg'] ?? '');
-    update_option('simple_wp_floating_button_icon_color', $form_data['simple_wp_floating_button_icon_color'] ?? '#000000');
-    update_option('simple_wp_floating_button_icon_size', $form_data['simple_wp_floating_button_icon_size'] ?? 'mediano');
+    $options = get_option('simple_wp_floating_button_options', []);
+    $options['svg'] = $form_data['simple_wp_floating_button_svg'] ?? '';
+    $options['icon_color'] = $form_data['simple_wp_floating_button_icon_color'] ?? '#000000';
+    $options['icon_size'] = $form_data['simple_wp_floating_button_icon_size'] ?? 'mediano';
+
+    update_option('simple_wp_floating_button_options', $options);
 
     wp_send_json_success();
 }
@@ -47,30 +54,58 @@ function simple_wp_floating_button_guardar_configuracion_tabs_exclude(){
     parse_str($_POST['data'], $form_data); // convierte en array
 
     // Guardar opciones
-    update_option('simple_wp_floating_button_excluir_pages', isset($form_data['simple_wp_floating_button_excluir_pages']) ? 1 : 0);
-    update_option('simple_wp_floating_button_excluir', $form_data['simple_wp_floating_button_excluir'] ?? '');
-    update_option('simple_wp_floating_button_excluir_single', isset($form_data['simple_wp_floating_button_excluir_single']) ? 1 : 0);
+    $options = get_option('simple_wp_floating_button_options', []);
+
+    $options['excluir'] = $form_data['simple_wp_floating_button_excluir'] ?? '';
+    $options['excluir_pages'] = isset($form_data['simple_wp_floating_button_excluir_pages']) ? 1 : 0;
+    $options['excluir_single'] = isset($form_data['simple_wp_floating_button_excluir_single']) ? 1 : 0;
+    update_option('simple_wp_floating_button_options', $options);
 
     wp_send_json_success();
 }
 
 // Registrar ajustes
 function simple_wp_floating_button_register_settings() {
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_color');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_texto');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_position');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_animation');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_svg');  // NUEVO
-    register_setting("simple_wp_floating_button_opciones", 'simple_wp_floating_button_icon_color');  // NUEVO
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_icon_size');  // NUEVO
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_url');  // NUEVO
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_target');  // NUEVO
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_auto');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_excluir');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_excluir_pages');
-    register_setting('simple_wp_floating_button_opciones', 'simple_wp_floating_button_excluir_single');
+
+    register_setting('simple_wp_floating_button_options', 'simple_wp_floating_button_options', [
+        'type'=>'array',
+        'default'=> [
+            'color' => '#1692b1',
+            'text' => '',
+            'position' => 'center',
+            'animation' => 'pulse-halo',
+            'svg' => '',
+            'icon_color' => '#000000ff',
+            'icon_size' => 'mediano',
+            'url' => '',
+            'target' => 0,
+            'auto' => 0,
+            'excluir' => '',
+            'excluir_pages' => 0,
+            'excluir_single' => 0,
+        ],
+        'sanitize_callback' => 'simple_wp_floating_button_sanitize_options',
+    ]);
 }
 add_action('admin_init', 'simple_wp_floating_button_register_settings');
+
+function simple_wp_floating_button_sanitize_options($input) {
+    return [
+        'color' => sanitize_hex_color($input['color'] ?? '#ff0000'),
+        'text' => sanitize_text_field($input['text'] ?? ''),
+        'position' => sanitize_text_field($input['position'] ?? 'center'),
+        'animation' => sanitize_text_field($input['animation'] ?? 'pulse-halo'),
+        'svg' => sanitize_text_field($input['svg'] ?? ''),
+        'icon_color' => sanitize_hex_color($input['icon_color'] ?? '#000000ff'),
+        'icon_size' => sanitize_text_field($input['icon_size'] ?? 'mediano'),
+        'url' => esc_url_raw($input['url'] ?? ''),
+        'target' => !empty($input['target']) ? 1 : 0,
+        'auto' => !empty($input['auto']) ? 1 : 0,
+        'excluir' => sanitize_textarea_field($input['excluir'] ?? ''),
+        'excluir_pages' => !empty($input['excluir_pages']) ? 1 : 0,
+        'excluir_single' => !empty($input['excluir_single']) ? 1 : 0,
+    ];
+}
 
 // Menú admin
 function simple_wp_floating_button_admin_menu() {

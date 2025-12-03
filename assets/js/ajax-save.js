@@ -36,6 +36,7 @@ jQuery(document).ready(function ($) {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
+          console.log(data)
           e.target.querySelector(
             "div#simple-wp-floating-button-estado"
           ).textContent = "Cambios guardados!"

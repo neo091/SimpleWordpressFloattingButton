@@ -31,7 +31,7 @@
 /* ===========================================================
    BOTÓN (ya NO lleva posición ni halo)
 =========================================================== */
-.simple-wp-floating-button-personalizado {
+.simple-wp-floating-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -48,7 +48,7 @@
 }
 
 /* Icon-only */
-.simple-wp-floating-button-personalizado.solo-icono {
+.simple-wp-floating-button.solo-icono {
   padding: 12px;
   width: 64px;
   height: 64px;
@@ -57,8 +57,7 @@
 }
 
 /* HOVER → se aplica al wrapper para no romper animaciones */
-.simple-wp-floating-button-wrapper:hover
-  .simple-wp-floating-button-personalizado {
+.simple-wp-floating-button-wrapper:hover .simple-wp-floating-button {
   transform: translateY(-2px);
   opacity: 0.92;
 }
