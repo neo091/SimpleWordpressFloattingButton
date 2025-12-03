@@ -26,20 +26,12 @@ function simple_wp_floating_button_enqueue_scripts($hook) {
 
     if($hook == 'toplevel_page_simple-wp-floating-button-tabs') {
         wp_enqueue_style('simple-wp-floating-button-tabs-style', plugin_dir_url(__FILE__) . 'assets/css/tabs-style.css');
-        wp_enqueue_script('simple-wp-floating-button-ajax', plugin_dir_url(__FILE__) . 'assets/js/tabs-ajax-save.js', ['jquery'], null, true);
+        wp_enqueue_script('simple-wp-floating-button-ajax', plugin_dir_url(__FILE__) . 'assets/js/ajax-save.js', ['jquery'], null, true);
         wp_localize_script('simple-wp-floating-button-ajax', 'miBotonAjax', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('simple_wp_floating_button_nonce')
         ]);
     };
-    
-    if($hook !== 'toplevel_page_simple-wp-floating-button-config') return; // solo en la página del plugin
-
-    wp_enqueue_script('simple-wp-floating-button-ajax', plugin_dir_url(__FILE__) . 'assets/js/ajax-save.js', ['jquery'], null, true);
-    wp_localize_script('simple-wp-floating-button-ajax', 'miBotonAjax', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('simple_wp_floating_button_nonce')
-    ]);
 }
 
 add_action('admin_enqueue_scripts', 'simple_wp_floating_button_enqueue_scripts');
